@@ -1,0 +1,732 @@
+1.find s
+
+import pandas as pd
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\enjoysport.csv")
+def find_s_algorithm(data):
+    # Initialize the most specific hypothesis
+    hypothesis = ['0'] * (len(data.columns) - 1)
+    
+    # Iterate through each positive example
+    for idx, row in data.iterrows():
+        if row['enjoysport'] == 'yes':
+            for i in range(len(hypothesis)):
+                if hypothesis[i] == '0':
+                    hypothesis[i] = row[i]
+                elif hypothesis[i] != row[i]:
+                    hypothesis[i] = '?'
+    
+    return hypothesis
+specific_hypothesis = find_s_algorithm(data)
+print("Specific Hypothesis:", specific_hypothesis)
+
+
+2.artificial neural network
+
+import numpy as np
+
+X = np.array(([2, 9], [1, 5], [3, 6]), dtype=float)
+y = np.array(([92], [86], [89]), dtype=float)
+X = X/np.amax(X,axis=0) #maximum of X array longitudinally
+y = y/100
+
+#Sigmoid Function
+def sigmoid (x):
+    return 1/(1 + np.exp(-x))
+
+#Derivative of Sigmoid Function
+def derivatives_sigmoid(x):
+    return x * (1 - x)
+
+#Variable initialization
+epoch=5 #Setting training iterations
+lr=0.1 #Setting learning rate
+
+inputlayer_neurons = 2 #number of features in data set
+hiddenlayer_neurons = 3 #number of hidden layers neurons
+output_neurons = 1 #number of neurons at output layer
+#weight and bias initialization
+
+wh=np.random.uniform(size=(inputlayer_neurons,hiddenlayer_neurons))
+bh=np.random.uniform(size=(1,hiddenlayer_neurons))
+wout=np.random.uniform(size=(hiddenlayer_neurons,output_neurons))
+bout=np.random.uniform(size=(1,output_neurons))
+
+#draws a random range of numbers uniformly of dim x*y
+for i in range(epoch):
+    #Forward Propogation
+    hinp1=np.dot(X,wh)
+    hinp=hinp1 + bh
+    hlayer_act = sigmoid(hinp)
+    outinp1=np.dot(hlayer_act,wout)
+    outinp= outinp1+bout
+    output = sigmoid(outinp)
+    
+    #Backpropagation
+    EO = y-output
+    outgrad = derivatives_sigmoid(output)
+    d_output = EO * outgrad
+    EH = d_output.dot(wout.T)
+    hiddengrad = derivatives_sigmoid(hlayer_act)#how much hidden layer wts contributed to error
+    d_hiddenlayer = EH * hiddengrad
+    
+    wout += hlayer_act.T.dot(d_output) *lr   # dotproduct of nextlayererror and currentlayerop
+    wh += X.T.dot(d_hiddenlayer) *lr
+    
+    print ("-----------Epoch-", i+1, "Starts----------")
+    print("Input: \n" + str(X)) 
+    print("Actual Output: \n" + str(y))
+    print("Predicted Output: \n" ,output)
+    print ("-----------Epoch-", i+1, "Ends----------\n")
+        
+print("Input: \n" + str(X)) 
+print("Actual Output: \n" + str(y))
+print("Predicted Output: \n" ,output)
+
+
+3.car price prediction model
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import warnings
+warnings.filterwarnings("ignore")
+# Load the dataset
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\CarPrice.csv")  
+# Select relevant features and target variable
+features = ['symboling', 'wheelbase', 'carlength', 'carwidth', 'carheight', 'curbweight',
+            'enginesize', 'boreratio', 'stroke', 'compressionratio', 'horsepower', 'peakrpm',
+            'citympg', 'highwaympg']
+target = 'price'
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(data[features], data[target], test_size=0.2, random_state=42)
+# Initialize and train the linear regression model
+model = LinearRegression()
+# Use a context manager to temporarily suppress the warning
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    model.fit(X_train, y_train)
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+# Calculate the Mean Squared Error (MSE) to evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse:.2f}")
+# Predict the price for a new car using a Numpy array
+new_car_features = [[3, 100, 180, 70, 55, 2500, 150, 3.5, 2.8, 9, 120, 5500, 25, 30]]
+predicted_price = model.predict(new_car_features)
+print(f"Predicted Price for the New Car: {predicted_price[0]:.2f}")
+
+
+4.classification algorithms
+
+# Importing required libraries
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report
+
+# Algorithms
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
+
+# 1. Data Loading and Splitting
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)  # 70% training, 30% testing
+
+# Models
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=1000),
+    "K-Nearest Neighbors": KNeighborsClassifier(),
+    "Support Vector Machine": SVC(),
+    "Decision Tree": DecisionTreeClassifier(),
+    "Random Forest": RandomForestClassifier(),
+    "Naive Bayes": GaussianNB()
+}
+
+# 2. Model Training, Prediction & 3. Evaluation
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    print(f"Model: {name}")
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("Classification Report:\n", classification_report(y_test, y_pred))
+    print("-"*60)
+
+
+5.credit score classification
+
+import pandas as pd
+# Sample data
+data=pd.read_csv("C:\\Users\\Lenovo\\Downloads\\CREDITSCORE.csv")
+# Create a DataFrame
+df = pd.DataFrame(data)
+# Define attribute weights (you can adjust these based on importance)
+weights = {
+    "Age": 0.1,
+    "Annual_Income": 0.3,
+    "Monthly_Inhand_Salary": 0.2,
+    "Num_Bank_Accounts": 0.05,
+    "Num_Credit_Card": 0.05,
+    "Interest_Rate": -0.1,  # Lower interest rate is better
+    "Num_of_Loan": -0.1,  # Fewer loans are better
+}
+# Define a function to calculate credit score
+def calculate_credit_score(row):
+    score = 0
+    for attribute, weight in weights.items():
+        if attribute == "Type_of_Loan":
+            # You can implement more complex logic here based on the types of loans
+            pass
+        else:
+            score += row[attribute] * weight
+    return score
+# Apply the function to each row
+df["Credit_Score"] = df.apply(calculate_credit_score, axis=1)
+
+# Display the result
+print(df[["ID", "Customer_ID", "Name", "Credit_Score"]])
+
+
+6.expectation and maximization algorithm
+
+import pandas as pd
+# Sample data
+data=pd.read_csv("C:\\Users\\Lenovo\\Downloads\\CREDITSCORE.csv")
+# Create a DataFrame
+df = pd.DataFrame(data)
+# Define attribute weights (you can adjust these based on importance)
+weights = {
+    "Age": 0.1,
+    "Annual_Income": 0.3,
+    "Monthly_Inhand_Salary": 0.2,
+    "Num_Bank_Accounts": 0.05,
+    "Num_Credit_Card": 0.05,
+    "Interest_Rate": -0.1,  # Lower interest rate is better
+    "Num_of_Loan": -0.1,  # Fewer loans are better
+}
+# Define a function to calculate credit score
+def calculate_credit_score(row):
+    score = 0
+    for attribute, weight in weights.items():
+        if attribute == "Type_of_Loan":
+            # You can implement more complex logic here based on the types of loans
+            pass
+        else:
+            score += row[attribute] * weight
+    return score
+# Apply the function to each row
+df["Credit_Score"] = df.apply(calculate_credit_score, axis=1)
+
+# Display the result
+print(df[["ID", "Customer_ID", "Name", "Credit_Score"]])
+
+
+7.find s
+
+import pandas as pd
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\enjoysport.csv")
+def find_s_algorithm(data):
+    # Initialize the most specific hypothesis
+    hypothesis = ['0'] * (len(data.columns) - 1)
+    
+    # Iterate through each positive example
+    for idx, row in data.iterrows():
+        if row['enjoysport'] == 'yes':
+            for i in range(len(hypothesis)):
+                if hypothesis[i] == '0':
+                    hypothesis[i] = row[i]
+                elif hypothesis[i] != row[i]:
+                    hypothesis[i] = '?'
+    
+    return hypothesis
+specific_hypothesis = find_s_algorithm(data)
+print("Specific Hypothesis:", specific_hypothesis)
+
+
+8.future sales prediction
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+import plotly.io as io
+io.renderers.default='browser'
+
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\futuresale prediction.csv")  # Use the correct file path for Android
+print(data.head())
+print(data.sample(5))
+print(data.isnull().sum())
+
+import plotly.express as px
+import plotly.graph_objects as go
+
+figure = px.scatter(data_frame=data, x="Sales", y="TV", size="TV", trendline="ols")
+figure.show()
+
+figure = px.scatter(data_frame=data, x="Sales", y="Newspaper", size="Newspaper", trendline="ols")
+figure.show()
+
+figure = px.scatter(data_frame=data, x="Sales", y="Radio", size="Radio", trendline="ols")
+figure.show()
+
+correlation = data.corr()
+print(correlation["Sales"].sort_values(ascending=False))
+
+x = np.array(data.drop(["Sales"], axis=1))  # Specify axis=1 to drop the "Sales" column
+y = np.array(data["Sales"])
+
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=42)
+model = LinearRegression()
+model.fit(xtrain, ytrain)
+print(model.score(xtest, ytest))
+
+features = np.array([[230.1, 37.8, 69.2]])  # Replace with specific feature values pip install statsmodels,pip uninstall plotly,pip install plotly
+print(model.predict(features))
+
+9.house price prediction
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+from sklearn.preprocessing import OneHotEncoder
+
+# 1. Data Loading
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\HousePricePrediction.csv")
+
+# 2. Data Preprocessing
+
+# One-hot encoding of categorical columns
+categorical_cols = ["MSSubClass", "MSZoning", "LotConfig", "BldgType", "Exterior1st"]
+data = pd.get_dummies(data, columns=categorical_cols, drop_first=True)
+
+# Drop the ID column
+data = data.drop(columns=["Id"])
+data.dropna(inplace=True)
+
+
+# Splitting data
+X = data.drop("SalePrice", axis=1)
+y = data["SalePrice"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Model Training
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# 4. Evaluation
+predictions = model.predict(X_test)
+mae = mean_absolute_error(y_test, predictions)
+print(f"Mean Absolute Error (MAE): ${mae:.2f}")
+# After prediction
+df_output = pd.DataFrame({'Actual Prices': y_test, 'Predicted Prices': predictions})
+
+print(df_output)
+
+
+10.iris flower classification
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = load_iris()
+X = iris.data  # Features
+y = iris.target  # Labels
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a KNN classifier with k=3
+knn_classifier = KNeighborsClassifier(n_neighbors=3)
+
+# Train the classifier on the training data
+knn_classifier.fit(X_train, y_train)
+
+# Make predictions on the testing data
+predictions = knn_classifier.predict(X_test)
+
+# Calculate the accuracy of the classifier
+accuracy = accuracy_score(y_test, predictions)
+print("Accuracy:", accuracy)
+
+# Predict the species of a new Iris flower
+new_flower_features = [[5.1, 3.5, 1.4, 0.2]]  # Replace with the features of the new flower
+predicted_species = knn_classifier.predict(new_flower_features)
+print("Predicted Species:", iris.target_names[predicted_species])
+
+11.iris flower classification using naive bayes
+
+# Importing required libraries
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report
+
+# 1. Data Loading
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# 2. Data Splitting
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)  # 70% training, 30% testing
+
+# 3. Model Training & Prediction
+gnb = GaussianNB()
+gnb.fit(X_train, y_train)
+
+y_pred = gnb.predict(X_test)
+
+# 4. Evaluation
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+12.k-nn
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+import numpy as np
+import matplotlib.pyplot as plt
+  
+irisData = load_iris()
+  
+# Create feature and target arrays
+X = irisData.data
+y = irisData.target
+  
+# Split into training and test set
+X_train, X_test, y_train, y_test = train_test_split(
+             X, y, test_size = 0.2, random_state=42)
+  
+neighbors = np.arange(1, 9)
+train_accuracy = np.empty(len(neighbors))
+test_accuracy = np.empty(len(neighbors))
+  
+# Loop over K values
+for i, k in enumerate(neighbors):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+      
+    # Compute training and test data accuracy
+    train_accuracy[i] = knn.score(X_train, y_train)
+    test_accuracy[i] = knn.score(X_test, y_test)
+  
+# Generate plot
+plt.plot(neighbors, test_accuracy, label = 'Testing dataset Accuracy')
+plt.plot(neighbors, train_accuracy, label = 'Training dataset Accuracy')
+plt.legend()
+plt.xlabel('n_neighbors')
+plt.ylabel('Accuracy')
+plt.show()
+
+13.linear regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Generate sample data
+np.random.seed(0)
+X = np.linspace(0, 10, 100).reshape(-1, 1)
+y = 2 * X + 1 + np.random.randn(100, 1)
+
+# Create linear regression object
+lr_model = LinearRegression()
+
+# Train the model using the training sets
+lr_model.fit(X, y)
+
+# Print the coefficients
+print('Coefficients: ', lr_model.coef_)
+print('Intercept: ', lr_model.intercept_)
+
+# Plot the data and the linear regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, lr_model.predict(X), color='red', linewidth=3)
+plt.title('Linear Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.show()
+
+
+14.linear and polynomial regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
+
+# Sample data
+X = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)  # Independent variable
+y = np.array([2, 4, 5, 4, 6])  # Dependent variable
+
+# Create a linear regression model
+linear_model = LinearRegression()
+linear_model.fit(X, y)
+linear_pred = linear_model.predict(X)
+
+# Create a polynomial regression model (degree 2)
+degree = 2
+poly_model = make_pipeline(PolynomialFeatures(degree), LinearRegression())
+poly_model.fit(X, y)
+poly_pred = poly_model.predict(X)
+
+# Plot the data, linear regression line, and polynomial regression curve
+plt.scatter(X, y, label='Actual Data')
+plt.plot(X, linear_pred, color='blue', label='Linear Regression')
+plt.plot(X, poly_pred, color='red', label=f'Polynomial Regression (degree {degree})')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.title('Linear vs Polynomial Regression')
+plt.show()
+
+15.logistic regression
+
+# Step 1: Import the required modules
+from sklearn.datasets import make_classification
+from matplotlib import pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+import pandas as pd
+
+# Step 2: Generate the dataset
+x, y = make_classification(
+    n_samples=100,
+    n_features=1,
+    n_classes=2,
+    n_clusters_per_class=1,
+    flip_y=0.03,
+    n_informative=1,
+    n_redundant=0,
+    n_repeated=0
+)
+print(y)
+
+# Step 3: visualize the data
+plt.scatter(x, y, c=y, cmap='rainbow')
+plt.title('Scatter Plot of Logistic Regression')
+plt.show()
+
+# Step 4: Split the dataset
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=1)
+
+x_train.shape
+
+# Step 4: Perform Logistic Regression
+log_reg = LogisticRegression()
+log_reg.fit(x_train, y_train)
+
+# Step 5: Make prediction using the model
+y_pred = log_reg.predict(x_test)
+
+# Step 6: Display the Confusion Matrix
+confusion_matrix(y_test, y_pred)
+
+
+16.mobile price prediction
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+import warnings
+warnings.filterwarnings("ignore")
+# Load the dataset (replace with your dataset)
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\mobile_prices.csv")
+
+# Assuming you have preprocessed the data and split it into X (features) and y (target)
+X = data.drop(columns=['price_range'])  # Features
+y = data['price_range']  # Target
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and train the RandomForestRegressor model
+model = RandomForestRegressor(random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Calculate the Mean Squared Error (MSE) to evaluate the model
+#mse = mean_squared_error(y_test, y_pred)
+#print(f"Mean Squared Error: {mse:.2f}")
+
+# Example new mobile data for prediction
+new_mobile_features = [[1500, 1, 2.2, 1, 5, 1, 32, 0.8, 140, 8, 6, 800, 1200, 4096, 12, 7, 15, 1, 1, 1]]
+predicted_price_range = model.predict(new_mobile_features)
+print(f"Predicted Price Range for the New Mobile: {predicted_price_range[0]:.2f}")
+
+17.naive bayes
+
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+import pandas as pd
+# Given dataset
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\enjoysport.csv")
+
+# Create a pandas DataFrame from the dataset
+
+df = pd.DataFrame(data)
+
+# Convert categorical features to numerical using label encoding
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+for col in df.columns:
+    df[col] = le.fit_transform(df[col])
+
+# Separate features (X) and target (y)
+X = df.drop('enjoysport', axis=1)
+y = df['enjoysport']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Naive Bayes classifier
+nb_classifier = GaussianNB()
+
+# Train the classifier on the training data
+nb_classifier.fit(X_train, y_train)
+
+# Make predictions on the testing data
+y_pred = nb_classifier.predict(X_test)
+
+# Calculate the confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+# Calculate the accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Confusion Matrix:")
+print(cm)
+print("Accuracy:", accuracy)
+
+18.perceptron
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import Perceptron
+from sklearn.metrics import accuracy_score
+import warnings
+warnings.filterwarnings("ignore")
+
+# Load the dataset (replace with your dataset)
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\IRIS.csv")
+
+# Assuming you have preprocessed the data and split it into X (features) and y (target)
+X = data.drop(columns=['species'])  # Features
+y = data['species']  # Target
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and train the Perceptron model
+model = Perceptron(random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Calculate the accuracy to evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+
+# Example new data for prediction
+new_data = [[5.1, 3.5, 1.4, 0.2]]  # Replace with your data
+predicted_species = model.predict(new_data)
+print(f"Predicted Species: {predicted_species[0]}")
+
+
+19.bankloan
+
+import numpy as np
+import pandas as pd
+
+dataset = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\breastcancer.csv")
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, -1].values
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+GaussianNB(priors=None, var_smoothing=1e-09)
+
+from sklearn.metrics import confusion_matrix, accuracy_score
+y_pred = classifier.predict(X_test)
+cm = confusion_matrix(y_test, y_pred)
+print("confusion matrix is",cm)
+accuracy_score(y_test, y_pred)
+
+20.candidate elimination
+
+import pandas as pd
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\enjoysport.csv")
+def initialize_hypothesis(data):
+    specific_hypothesis=['0']*(len(data.columns)-1)
+    general_hypothesis=['?']*(len(data.columns)-1)
+    return specific_hypothesis,general_hypothesis
+def canditate_elimination(data):
+    specific_hypothesis,general_hypothesis=initialize_hypothesis(data)
+    for idx,row in data.iterrows():
+        if row['enjoysport']=='yes':
+            for i in range(len(specific_hypothesis)):
+                if specific_hypothesis[i]=='0':
+                    specific_hypothesis[i]=row[i]
+                elif specific_hypothesis[i]!=row[i]:
+                    specific_hypothesis[i]='?'
+        else:
+            for i in range(len(general_hypothesis)):
+                if specific_hypothesis[i]!=row[i]:
+                    general_hypothesis[i]='?'
+    return specific_hypothesis,general_hypothesis
+specific,general=canditate_elimination(data)
+print("specific hypothesis:",specific)
+print("general hypothesis:",general)
+
+
+20.decision tree
+
+import pandas as pd
+data = pd.read_csv("C:\\Users\\Lenovo\\Downloads\\enjoysport.csv")
+def initialize_hypothesis(data):
+    specific_hypothesis=['0']*(len(data.columns)-1)
+    general_hypothesis=['?']*(len(data.columns)-1)
+    return specific_hypothesis,general_hypothesis
+def canditate_elimination(data):
+    specific_hypothesis,general_hypothesis=initialize_hypothesis(data)
+    for idx,row in data.iterrows():
+        if row['enjoysport']=='yes':
+            for i in range(len(specific_hypothesis)):
+                if specific_hypothesis[i]=='0':
+                    specific_hypothesis[i]=row[i]
+                elif specific_hypothesis[i]!=row[i]:
+                    specific_hypothesis[i]='?'
+        else:
+            for i in range(len(general_hypothesis)):
+                if specific_hypothesis[i]!=row[i]:
+                    general_hypothesis[i]='?'
+    return specific_hypothesis,general_hypothesis
+specific,general=canditate_elimination(data)
+print("specific hypothesis:",specific)
+print("general hypothesis:",general)
+
+
