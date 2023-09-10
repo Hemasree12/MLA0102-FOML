@@ -1,0 +1,517 @@
+1.DECIMAL TO BINARY:
+#include<stdio.h>
+int main()
+{
+	int i,a[30],n;
+	printf("enter the number:");
+	scanf("%d",&n);
+	for(i=0;n>0;i++)
+	{
+		a[i]=n%2;
+		n=n/2;
+	}
+	printf("binary of given number is:");
+	for(i=i-1;i>=0;i--)
+	{
+		printf("%d",a[i]);
+	}
+
+}
+
+2.DECIMAL TO OCTAL:
+#include<stdio.h>
+int main()
+{
+	int n,i,a[10];
+	printf("enter the decimal number:");
+	scanf("%d",&n);
+	for(i=0;n>0;i++)
+	{
+		a[i]=n%8;
+		n=n/8;
+	}
+	printf("the octal number is:");
+	for(i=i-1;i>=0;i--)
+	{
+		printf("%o",a[i]);
+	}
+}
+
+3.DECIMAL TO HEXA:
+#include<stdio.h>
+int main()
+{
+	int i,a[20],n;
+	printf("enter the decimal number:");
+	scanf("%d",&n);
+	for(i=0;n>0;i++){
+		a[i]=n%16;
+		n=n/16;
+	}
+	printf("the hexadecimal number is:");
+	for(i=i-1;i>=0;i--){
+		printf("%x",a[i]);
+	}
+}
+
+4.BINARY TO DECIMAL:
+#include<stdio.h>
+int main()
+{
+	int n,rem,decimal_num,base=1;
+	printf("enter the binary number:");
+	scanf("%d",&n);
+	while(n>0)
+	{
+		rem=n%10;
+		decimal_num=decimal_num+(base*rem);
+		n=n/10;
+		base=base*2;
+	}
+	printf("the decimal number is:%d",decimal_num);
+}
+
+5.BINARY TO OCTAL:
+#include<stdio.h>
+int main()
+{
+	int n,base=1,rem,d_num=0;
+	printf("enter the number:");
+	scanf("%d",&n);
+	while(n>0)
+	{
+		rem=n%10;
+		d_num=d_num+base*rem;
+		n=n/10;
+		base=2*base;
+	}
+	n=d_num;
+	printf("the octal num is:%o",n);
+}
+
+6.BINARY TO HEXA:
+#include<stdio.h>
+int main()
+{
+	int n,rem,decimal_num=0,base=1;
+	printf("enter the binary number:");
+	scanf("%d",&n);
+	while(n>0)
+	{
+		rem=n%10;
+		decimal_num=decimal_num+base*rem;
+		n=n/10;
+		base=base*2;
+	}
+	n=decimal_num;
+	printf("the hexa number is:%x",n);
+}
+
+7.OCTAL TO DECIMAL:
+#include<stdio.h>
+int main()
+{
+	int n,decimal_num,base=1,rem;
+	printf("enter the octal number:");
+	scanf("%o",&n);
+		while(n>0)
+	{
+		rem=n%10;
+		decimal_num=decimal_num+base*rem;
+		n=n/10;
+		base=base*8;
+	}
+	printf("the decimal number is:%d",decimal_num);
+}
+
+
+8.OCTAL TO BINARY:
+#include<stdio.h>
+int main()
+{
+	int i,a[30],n;
+	printf("enter the number:");
+	scanf("%o",&n);
+	for(i=0;n>0;i++)
+	{
+		a[i]=n%2;
+		n=n/2;
+	}
+	printf("binary of given number is:");
+	for(i=i-1;i>=0;i--)
+	{
+		printf("%d",a[i]);
+	}
+
+}
+
+9.OCTAL TO HEXA:
+#include<stdio.h>
+int main()
+{
+	int n;
+	printf("enter the octal number:");
+	scanf("%o",&n);
+	printf("the hexadecimal number:%x",n);
+	
+}
+
+10.HEXA TO BINARY:
+#include <stdio.h>
+int main() {
+    int n, a[10],i,m;
+    printf("Enter the hexadecimal number: ");
+    scanf("%x", &n);
+    m=n;
+    for(i=0;n>0;i++)
+    {
+    	a[i]=m%2;
+    	m=m/2;
+	}
+	printf("the binary number is:");
+	for(i=i-1;i>=0;i--)
+	{
+		printf("%d",a[i]);
+	}
+return 0;
+}
+
+11.HEXA TO DECIMAL:
+#include<stdio.h>
+int main()
+{
+	int n;
+	printf("enter the hexa number:");
+	scanf("%x",&n);
+	printf("the decimal number is:%d",n);
+}
+
+12.HEXA TO OCTAL:
+#include<stdio.h>
+int main()
+{
+	int n;
+	printf("enter the hexadecimal number:");
+	scanf("%x",&n);
+	printf("the octal number is:%o",n);
+}
+
+13.PIPELINING:
+#include <stdio.h>
+int main() {
+    int a, b, choice, res;
+    int fetchCycles = 1;
+    int decodeCycles = 1;
+    int executeCycles = 1;
+    int writeBackCycles = 1;
+    // Fetch Stage
+    printf("Enter number 1:");
+    scanf("%d", &a);
+    printf("Enter number 2:");
+    scanf("%d", &b);
+    // Decode Stage
+    printf("1-Addition:\n2-Subtraction:\n3-Multiplication:\n4-Division:");
+    scanf("%d", &choice);
+    // Execution Stage
+    switch (choice) {
+        case 1:
+            printf("Performing addition\n");
+            res = a + b;
+            break;
+        case 2:
+            printf("Performing subtraction\n");
+            res = a - b;
+            break;
+        case 3:
+            printf("Performing Multiplication\n");
+            res = a * b;
+            break;
+        case 4:
+            printf("Performing Division\n");
+            res = a / b;
+            break;
+        default:
+            printf("Wrong input");
+            return 1;
+    }
+    // Write Back Stage
+    printf("Result: %d\n", res);
+    printf("Total Cycles: %d\n", fetchCycles + decodeCycles + executeCycles + writeBackCycles);
+return 0;
+}
+
+14.CPU PERFORMANCE:
+#include <stdio.h>
+int main() {
+	int i;
+    float clockRates[3] = {3.0,2.5,4.0}; 
+    float CPIs[3] = {1.5, 1.0, 2.2}; 
+    int instructionCount = 100; 
+    for(i=0;i<3;i++) {
+        float executionTime = (CPIs[i] * instructionCount) / clockRates[i];
+        printf("%d CPU time is %f\n", i + 1, executionTime);
+    }
+return 0;
+}
+
+15.BINARY ADDITION:
+#include<stdio.h>    
+int main()
+{  
+int n,m,o;
+printf("Enter the first number: ");    
+scanf("%d",&m);
+printf("Enter the second number: ");    
+scanf("%d",&o);
+n=m+o;
+int a[10],i;    
+for(i=0;n>0;i++)    
+{    
+a[i]=n%2;    
+n=n/2;    
+}    
+printf("\n Subtraction of the number in Binary=");    
+for(i=i-1;i>=0;i--)    
+{    
+printf("%d",a[i]);    
+}  
+return 0;
+}
+
+16.BINARY SUBTRACTION:
+#include<stdio.h>    
+int main()
+{  
+int n,m,o;
+printf("Enter the first number: ");    
+scanf("%d",&m);
+printf("Enter the second number: ");    
+scanf("%d",&o);
+n=m-o;
+int a[10],i;    
+for(i=0;n>0;i++)    
+{    
+a[i]=n%2;    
+n=n/2;    
+}    
+printf("\n Subtraction of the number in Binary=");    
+for(i=i-1;i>=0;i--)    
+{    
+printf("%d",a[i]);    
+}  
+return 0;
+}
+
+17.BINARY MULTIPLICATION:
+#include<stdio.h>    
+int main()
+{  
+int n,m,o;
+printf("Enter the first number: ");    
+scanf("%d",&m);
+printf("Enter the second number: ");    
+scanf("%d",&o);
+n=m*o;
+int a[10],i;    
+for(i=0;n>0;i++)    
+{    
+a[i]=n%2;    
+n=n/2;    
+}    
+printf("\n Subtraction of the number in Binary=");    
+for(i=i-1;i>=0;i--)    
+{    
+printf("%d",a[i]);    
+}  
+return 0;
+}
+
+18.BINARY DIVISION:
+#include<stdio.h>    
+int main()
+{  
+int n,m,o;
+printf("Enter the first number: ");    
+scanf("%d",&m);
+printf("Enter the second number: ");    
+scanf("%d",&o);
+n=m/o;
+int a[10],i;    
+for(i=0;n>0;i++)    
+{    
+a[i]=n%2;    
+n=n/2;    
+}    
+printf("\n Subtraction of the number in Binary=");    
+for(i=i-1;i>=0;i--)    
+{    
+printf("%d",a[i]);    
+}  
+return 0;
+}
+19.OPERATORS:
+MVI A,03
+MVI B,04
+XRA B
+STA 2000
+HLT
+MVI A,01
+MVI B,02
+ORA B
+STA 03
+HLT
+MVI A,05
+MVI B,04
+ANA B
+STA 1400
+HLT
+
+
+20.SWAPPING:
+LDA 01
+MOV B,A
+LDA 02
+MOV C,A
+MOV A,B
+STA 02
+MOV A,C
+STA 01
+HLT
+
+21.SQUARE NUMBER:
+LXI H,8000
+XRA A
+MOV B,M
+LOOP: ADD M
+DCR B
+JNZ LOOP
+STA 8001
+HLT
+
+22.LARGEST NUMBER:
+MVI A, 66   
+MVI B, 34   
+CMP B
+JC LABEL_A
+JMP LABEL_B
+LABEL_A: STA 200
+JMP END
+LABEL_B: MOV A,B
+STA 200
+END: HLT
+
+23.SMALLEST NUMBER:
+MVI A,01
+MVI B,02
+CMP B
+JC LABEL_B
+JMP LABEL_A
+LABEL_A: STA 03
+JMP END
+LABEL_B: MOV A,B
+STA 03
+END: HLT
+
+24.LEFT ROTATION:
+MVI A,03
+RRC
+RRC
+RRC
+RRC
+STA 04
+HLT
+
+25.ADDING N NUMBERS:
+LXI H,01
+MOV C,M
+MVI A,00
+MOV B,A
+LOOP: ADD C
+JNC SKIP
+INR B
+SKIP: DCR C
+JNZ LOOP
+STA 02
+MOV A,B
+STA 03
+HLT
+
+26:16 BIT ADDITION:
+LDA 2500
+MOV B,A
+LDA 2501
+ADD B
+MOV C,A
+LDA 2503
+MOV B,A
+LDA 2502
+ADC B
+MOV D,A
+MVI A,00
+ADD C
+ADD D
+STA 2506
+HLT
+
+27.16BIT SUBTRACTION:
+LHLD 2050
+XCHG
+LHLD 2052
+MVI C,00
+MOV A, E
+SUB L
+STA 2054
+HLT
+
+28.8BIT SUBTRACTION:
+LDA 8000
+MOV B, A
+LDA 8001
+SUB B
+STA 8002
+RST 1
+
+29.8BIT MULTIPLICATION:
+LDA 01
+MOV B,A
+LDA 02
+MOV C,A
+MVI A,00H
+LOOP: ADD B
+DCR C
+JNZ LOOP
+STA 03
+HLT
+
+30.8BIT ADDITION:
+LDA 8500
+MOV B, A
+LDA 8501
+ADD B
+STA 8502
+RST 1
+
+31:8BIT DIVISION:
+LDA 101
+MOV B,A
+LDA 100
+MVI C,00
+LOOP: CMP B
+JC STORE
+SUB B
+INR C
+JMP LOOP
+STORE: STA 103
+MOV A,C
+STA 102
+HLT
+
+32.1S AND 2S COMPLIMENT:
+LDA 00
+CMA
+STA 02
+ADI 01
+STA 03
+HLT
+
+
